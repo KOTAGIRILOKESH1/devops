@@ -1,0 +1,55 @@
+﻿@model ConfigFileComparer.Models.ConfigFileModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Config File Comparer</title>
+    <style>
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
+        .highlight {
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+    <h1>Compare Config Files</h1>
+    <form asp-action="Compare" method="post">
+        <div>
+            <label for="oldFilePath">Old File:</label>
+            <input type="text" name="OldFilePath" id="oldFilePath" value="@Model.OldFilePath" />
+        </div>
+        <div>
+            <label for="newFilePath">New File:</label>
+            <input type="text" name="NewFilePath" id="newFilePath" value="@Model.NewFilePath" />
+        </div>
+        <button type="submit">Compare</button>
+    </form>
+    <form asp-action="Refresh" method="post">
+        <input type="hidden" name="OldFilePath" value="@Model.OldFilePath" />
+        <input type="hidden" name="NewFilePath" value="@Model.NewFilePath" />
+        <button type="submit">Refresh</button>
+    </form>
+    <form asp-action="Clear" method="post">
+        <button type="submit">Clear</button>
+    </form>
+
+    @if (!string.IsNullOrEmpty(Model.ComparisonResult))
+    {
+        @Html.Raw(Model.ComparisonResult)
+    }
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div>
+            <h2>Error</h2>
+            <pre>@string.Join("\n", ViewData.ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage))</pre>
+        </div>
+    }
+</body>
+</html>
